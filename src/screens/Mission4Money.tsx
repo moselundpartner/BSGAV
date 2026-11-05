@@ -9,7 +9,7 @@ import { TimerRing } from '../components/TimerRing'
 import { MATH_BONUS_PER_SEC, MATH_POINTS, MATH_TIME, TASKS_OFFER, TASKS_RATE, type MathTask } from '../content/math'
 import { confettiAt, pointsAt } from '../lib/fx'
 import { haptic } from '../lib/haptics'
-import { useCountdown, useShake } from '../lib/hooks'
+import { useCountdown, usePhase, useShake } from '../lib/hooks'
 import { pick, shuffle } from '../lib/random'
 import { sfx } from '../lib/sound'
 import { useGame } from '../state/game'
@@ -28,7 +28,7 @@ export function Mission4Money() {
   const tasks = useMemo(() => [pick(TASKS_RATE), pick(TASKS_OFFER)], [])
   const opts = useMemo(() => tasks.map((t) => shuffle(t.options.map((o, i) => ({ text: o, right: i === 0 })))), [tasks])
   const [idx, setIdx] = useState(0)
-  const [phase, setPhase] = useState<'title' | 'ask' | 'fb'>('title')
+  const [phase, setPhase, phaseRef] = usePhase<'title' | 'ask' | 'fb'>('title')
   const [picked, setPicked] = useState<number | null>(null)
   const [hint, setHint] = useState(false)
   const [kasse, setKasse] = useState(0)
@@ -44,9 +44,9 @@ export function Mission4Money() {
 
   const answer = useCallback(
     (i: number, el: HTMLElement | null, timeLeft: number) => {
-      if (phase !== 'ask') return
-      setPicked(i)
+      if (phaseRef.current !== 'ask') return
       setPhase('fb')
+      setPicked(i)
       const right = i >= 0 && options[i].right
       if (right) {
         const pts = MATH_POINTS + Math.round(timeLeft * MATH_BONUS_PER_SEC)
@@ -81,12 +81,13 @@ export function Mission4Money() {
         shake()
       }
     },
-    [phase, options, addScore, shake],
+    [phaseRef, setPhase, options, addScore, shake],
   )
 
   const { left, reset } = useCountdown(MATH_TIME, phase === 'ask', () => answer(-1, null, 0))
 
   const nextTask = () => {
+    if (phaseRef.current !== 'fb') return
     if (idx < tasks.length - 1) {
       setIdx(idx + 1)
       setPicked(null)
@@ -96,7 +97,7 @@ export function Mission4Money() {
     } else next()
   }
 
-  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'ask' : p)), [])
+  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'ask' : p)), [setPhase])
   const right = picked != null && picked >= 0 && options[picked]?.right
   const timedOut = picked === -1
 

@@ -75,6 +75,15 @@ export const Skyline = memo(function Skyline() {
   )
 })
 
+/** Horizont im Intro: auf kurzen Handys etwas höher, damit das Schiff nicht verdeckt wird. */
+export function introHorizon(): number {
+  try {
+    return window.innerHeight < 720 ? 55 : 62
+  } catch {
+    return 62
+  }
+}
+
 interface BackdropProps {
   /** Horizont in % von oben */
   horizon?: number

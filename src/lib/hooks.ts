@@ -107,3 +107,18 @@ export function prefersReducedMotion(): boolean {
     return false
   }
 }
+
+/**
+ * State + Ref, die sofort aktualisiert wird. Für Spiel-Phasen, damit auch
+ * Buttons, die gerade ausgeblendet werden (alte Closures), keine Punkte doppelt vergeben.
+ */
+export function usePhase<T>(initial: T): [T, (v: T | ((p: T) => T)) => void, { readonly current: T }] {
+  const [state, setState] = useState(initial)
+  const ref = useRef(initial)
+  const set = useCallback((v: T | ((p: T) => T)) => {
+    const nv = typeof v === 'function' ? (v as (p: T) => T)(ref.current) : v
+    ref.current = nv
+    setState(nv)
+  }, [])
+  return [state, set, ref]
+}

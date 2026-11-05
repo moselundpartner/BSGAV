@@ -7,7 +7,7 @@ import { MissionTitle } from '../components/MissionTitle'
 import { TimerRing } from '../components/TimerRing'
 import { emitFx } from '../lib/fx'
 import { haptic } from '../lib/haptics'
-import { useCountdown, useShake } from '../lib/hooks'
+import { useCountdown, usePhase, useShake } from '../lib/hooks'
 import { shuffle } from '../lib/random'
 import { sfx } from '../lib/sound'
 import { useGame } from '../state/game'
@@ -79,12 +79,12 @@ function HeelGauge({ heel }: { heel: number }) {
 
 export function Mission2Loading() {
   const { addScore, next } = useGame()
-  const [phase, setPhase] = useState<'title' | 'play' | 'done'>('title')
+  const [phase, setPhase, phaseRef] = usePhase<'title' | 'play' | 'done'>('title')
   const [quay, setQuay] = useState<Box[]>(() => shuffle(WEIGHTS).map((w, i) => ({ id: i, w })))
   const [grid, setGrid] = useState<(Box | null)[][]>(() => Array.from({ length: COLS }, () => Array(TIERS).fill(null)))
   const [selected, setSelected] = useState<Box | null>(null)
   const [craneCol, setCraneCol] = useState<number | null>(null)
-  const [busy, setBusy] = useState(false)
+  const [busy, setBusy, busyRef] = usePhase(false)
   const [violations, setViolations] = useState(0)
   const [warn, setWarn] = useState<string>('')
   const [result, setResult] = useState<{ balance: number; stack: number; time: number } | null>(null)
@@ -136,7 +136,7 @@ export function Mission2Loading() {
         } else sfx.ok()
       }, 200)
     },
-    [grid, violations, addScore],
+    [grid, violations, addScore, setPhase],
   )
 
   const { left } = useCountdown(TIME, phase === 'play', () => finish(0))
@@ -163,14 +163,14 @@ export function Mission2Loading() {
   }, [heel])
 
   const selectBox = (b: Box) => {
-    if (phase !== 'play' || busy) return
+    if (phaseRef.current !== 'play' || busyRef.current) return
     sfx.tap()
     haptic.tap()
     setSelected((s) => (s?.id === b.id ? null : b))
   }
 
   const placeIn = (c: number) => {
-    if (phase !== 'play' || busy) return
+    if (phaseRef.current !== 'play' || busyRef.current) return
     if (!selected) {
       setWarn('👇 Tipp zuerst einen Container auf dem Kai an!')
       shakeQuay()
@@ -227,7 +227,7 @@ export function Mission2Loading() {
   const craneX = craneCol == null ? S / 2 : colX(craneCol)
   const hookY = H * 0.12
 
-  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'play' : p)), [])
+  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'play' : p)), [setPhase])
   const total = result ? result.balance + result.stack + result.time : 0
 
   return (

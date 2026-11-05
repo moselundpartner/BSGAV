@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { introHorizon } from '../art/Backdrop'
 import { ContainerShip } from '../art/Ships'
 import { Button } from '../components/Button'
 import { Term } from '../components/Term'
@@ -21,6 +22,7 @@ export function Intro() {
   const [error, setError] = useState('')
   const [controls, shake] = useShake()
   const hornPlayed = useRef(false)
+  const horizon = introHorizon()
 
   useEffect(() => {
     const t = window.setTimeout(() => setReady(true), 2300)
@@ -45,7 +47,7 @@ export function Intro() {
       {/* Einlaufendes Schiff */}
       <motion.div
         className="absolute"
-        style={{ top: 'calc(62% - 112px)', width: 330, left: '50%', marginLeft: -165 }}
+        style={{ top: `calc(${horizon}% - min(330px, 46vh) * 0.34)`, width: 'min(330px, 46vh)', left: 'calc(50% - min(330px, 46vh) / 2)' }}
         initial={{ x: 380 }}
         animate={{ x: -10 }}
         transition={{ duration: 2.2, ease: [0.16, 0.84, 0.3, 1] }}
@@ -77,7 +79,7 @@ export function Intro() {
       </motion.div>
 
       {/* Titel */}
-      <div className="relative z-10 px-6 pt-[max(56px,calc(env(safe-area-inset-top)+44px))] text-center">
+      <div className="relative z-10 px-6 pt-[max(48px,calc(env(safe-area-inset-top)+40px))] text-center">
         <motion.div
           className="mb-2 inline-flex items-center gap-2 rounded-full border border-signal/40 bg-signal/10 px-3 py-1 text-[12px] font-extrabold uppercase tracking-[0.2em] text-signal"
           initial={{ opacity: 0, y: -10 }}
@@ -156,7 +158,7 @@ export function Intro() {
           <Button big className="mt-1 w-full" onClick={submit}>
             Los geht's <span aria-hidden>→</span>
           </Button>
-          <p className="mt-3 text-center text-[12px] text-ink/50">Ohne Anmeldung · Keine Daten verlassen dein Handy</p>
+          <p className="mt-2.5 text-center text-[11px] text-ink/50">Ohne Anmeldung · Keine Daten verlassen dein Handy</p>
         </motion.div>
       </motion.div>
     </div>

@@ -9,7 +9,7 @@ import { TermCard } from '../components/Term'
 import { ORDERS, ROUTE_COLORS, ROUTE_POINTS, SHIP_POINTS, type Order, type RouteOption } from '../content/orders'
 import { confettiAt, pointsAt } from '../lib/fx'
 import { haptic } from '../lib/haptics'
-import { useShake } from '../lib/hooks'
+import { usePhase, useShake } from '../lib/hooks'
 import { shuffle } from '../lib/random'
 import { sfx } from '../lib/sound'
 import { useGame } from '../state/game'
@@ -39,7 +39,7 @@ export function Mission1Booking() {
   const orders = useMemo(pickOrders, [])
   const routeOrder = useMemo(() => orders.map((o) => shuffle(o.routes)), [orders])
   const [idx, setIdx] = useState(0)
-  const [phase, setPhase] = useState<Phase>('title')
+  const [phase, setPhase, phaseRef] = usePhase<Phase>('title')
   const [ship, setShip] = useState<ShipType | null>(null)
   const [route, setRoute] = useState<RouteOption | null>(null)
   const [gridCtl, shakeGrid] = useShake()
@@ -53,10 +53,11 @@ export function Mission1Booking() {
     [routes],
   )
 
-  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'ship' : p)), [])
+  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'ship' : p)), [setPhase])
 
   const chooseShip = (t: ShipType, el: HTMLElement) => {
-    if (phase !== 'ship') return
+    if (phaseRef.current !== 'ship') return
+    setPhase('shipFb')
     setShip(t)
     if (t === order.ship) {
       sfx.ok()
@@ -69,14 +70,13 @@ export function Mission1Booking() {
       haptic.bad()
       shakeGrid()
     }
-    setPhase('shipFb')
   }
 
   const chooseRoute = (r: RouteOption, el: HTMLElement) => {
-    if (phase !== 'route') return
+    if (phaseRef.current !== 'route') return
+    setPhase('sailing')
     setRoute(r)
     sfx.horn()
-    setPhase('sailing')
     // Punkte erst nach der Fahrt
     window.setTimeout(() => {
       const pts = ROUTE_POINTS[r.quality]
@@ -99,6 +99,7 @@ export function Mission1Booking() {
   }
 
   const nextOrder = () => {
+    if (phaseRef.current !== 'routeFb') return
     if (idx < orders.length - 1) {
       setIdx(idx + 1)
       setShip(null)
@@ -143,7 +144,7 @@ export function Mission1Booking() {
                     ))}
                   </span>
                 </div>
-                <div className="text-[14px] font-semibold text-ink/70">{order.customer} will verschiffen:</div>
+                <div className="text-[14px] font-semibold text-ink/70">{order.customer} braucht einen Transport:</div>
               </div>
             </div>
             <div className="mt-2 text-[20px] font-black leading-tight">{order.amount}</div>
@@ -258,7 +259,7 @@ export function Mission1Booking() {
         open={phase === 'shipFb'}
         tone={shipOk ? 'ok' : 'bad'}
         title={shipOk ? `Perfekt! +${SHIP_POINTS}` : `Besser wäre: ${SHIP_INFO[order.ship].name}`}
-        onContinue={() => setPhase('route')}
+        onContinue={() => setPhase((p) => (p === 'shipFb' ? 'route' : p))}
         autoMs={4200}
         cta="Zur Route"
       >

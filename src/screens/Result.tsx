@@ -14,7 +14,11 @@ const MISSION_NAMES = ['📋 Buchung', '🏗️ Beladen', '⛈️ Krise', '💶 
 let lastSavedKey = ''
 
 export function Result() {
-  const { name, total, missionScores, round, restart, next } = useGame()
+  const game = useGame()
+  const { restart, next } = game
+  // Werte beim Öffnen einfrieren – beim Ausblenden ändert sich der Spielstand schon (Neustart)
+  const [snap] = useState(() => ({ name: game.name, total: game.total, missionScores: game.missionScores, round: game.round }))
+  const { name, total, missionScores, round } = snap
   const rank = rankFor(total)
   const rankIdx = RANKS.indexOf(rank)
   const [board, setBoard] = useState<{ list: ScoreEntry[]; index: number }>({ list: loadScores(), index: -1 })

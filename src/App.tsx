@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Backdrop } from './art/Backdrop'
+import { Backdrop, introHorizon } from './art/Backdrop'
 import { FxLayer } from './components/FxLayer'
 import { SoundToggle } from './components/SoundToggle'
 import { useGame, type Screen } from './state/game'
@@ -44,7 +44,7 @@ function renderScreen(s: Screen) {
 
 export default function App() {
   const { screen, round } = useGame()
-  const horizon = screen === 'intro' ? 62 : screen === 'm2' ? 82 : 70
+  const horizon = screen === 'intro' ? introHorizon() : screen === 'm2' ? 82 : 70
   return (
     <div className="app-h relative mx-auto w-full max-w-[480px] overflow-hidden bg-night-900 shadow-[0_0_80px_rgba(0,0,0,.6)]">
       <Backdrop horizon={horizon} stormy={screen === 'm3'} showSkyline={screen !== 'm2'} showMoon={screen === 'intro'} />

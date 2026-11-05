@@ -13,7 +13,7 @@ import { TimerRing } from '../components/TimerRing'
 import { CRISES, CRISIS_TIME, SPEED_BONUS_PER_SEC, type Crisis, type CrisisOption } from '../content/crises'
 import { confettiAt, pointsAt } from '../lib/fx'
 import { haptic } from '../lib/haptics'
-import { useCountdown, useShake } from '../lib/hooks'
+import { useCountdown, usePhase, useShake } from '../lib/hooks'
 import { pick, shuffle } from '../lib/random'
 import { sfx } from '../lib/sound'
 import { useGame } from '../state/game'
@@ -135,7 +135,7 @@ export function Mission3Crisis() {
   const { addScore, next } = useGame()
   const crisis = useMemo<Crisis>(() => pick(CRISES), [])
   const options = useMemo(() => shuffle(crisis.options), [crisis])
-  const [phase, setPhase] = useState<Phase>('title')
+  const [phase, setPhase, phaseRef] = usePhase<Phase>('title')
   const [choice, setChoice] = useState<CrisisOption | null>(null)
   const [timedOut, setTimedOut] = useState(false)
   const [bonus, setBonus] = useState(0)
@@ -145,7 +145,8 @@ export function Mission3Crisis() {
 
   const decide = useCallback(
     (opt: CrisisOption | null, timeLeft: number) => {
-      if (phase !== 'alarm') return
+      if (phaseRef.current !== 'alarm') return
+      setPhase('outcome')
       let o = opt
       if (!o) {
         // Zeit abgelaufen → teuerste Folge, keine Punkte
@@ -155,7 +156,6 @@ export function Mission3Crisis() {
       const b = opt && o.points >= 200 ? Math.round(timeLeft * SPEED_BONUS_PER_SEC) : 0
       setBonus(b)
       setChoice(o)
-      setPhase('outcome')
       const pts = opt ? o.points + b : 0
       addScore(2, pts)
       window.setTimeout(() => {
@@ -171,7 +171,7 @@ export function Mission3Crisis() {
         if (pts) pointsAt(ptsRef.current, pts)
       }, 500)
     },
-    [phase, crisis, addScore, shake],
+    [phaseRef, setPhase, crisis, addScore, shake],
   )
 
   const { left } = useCountdown(CRISIS_TIME, phase === 'alarm', () => decide(null, 0))
@@ -185,9 +185,9 @@ export function Mission3Crisis() {
       haptic.big()
     }, 1800)
     return () => window.clearTimeout(t)
-  }, [phase])
+  }, [phase, setPhase])
 
-  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'calm' : p)), [])
+  const onTitleDone = useCallback(() => setPhase((p) => (p === 'title' ? 'calm' : p)), [setPhase])
 
   const Scene = phase === 'calm' || phase === 'title' ? CalmScene : crisis.id === 'storm' ? StormScene : crisis.id === 'strike' ? StrikeScene : CanalScene
   const good = !!choice && !timedOut && choice.points >= 200
@@ -198,7 +198,7 @@ export function Mission3Crisis() {
 
       <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-[max(16px,env(safe-area-inset-bottom))]">
         {/* Szene */}
-        <motion.div animate={ctl} className="relative mt-1 aspect-[16/9] w-full overflow-hidden rounded-3xl border border-petrol-400/25 shadow-card">
+        <motion.div animate={ctl} className="relative mt-1 aspect-[16/9] max-h-[30vh] w-full overflow-hidden rounded-3xl border border-petrol-400/25 shadow-card">
           <Scene />
           <AnimatePresence>
             {phase === 'alarm' && (

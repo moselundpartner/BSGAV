@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react'
 import { load, save } from '../lib/storage'
 
 export type Screen =
@@ -46,12 +46,23 @@ export function GameProvider({ children }: { children: ReactNode }) {
     round: 0,
   }))
 
+  // Navigations-Sperre: verhindert, dass wildes Doppeltippen Screens überspringt
+  const lastNav = useRef(0)
+  const navOk = () => {
+    const now = Date.now()
+    if (now - lastNav.current < 700) return false
+    lastNav.current = now
+    return true
+  }
+
   const go = useCallback((screen: Screen) => {
+    if (!navOk()) return
     setState((s) => ({ ...s, screen }))
     window.scrollTo(0, 0)
   }, [])
 
   const next = useCallback(() => {
+    if (!navOk()) return
     setState((s) => {
       const i = FLOW.indexOf(s.screen)
       return { ...s, screen: FLOW[Math.min(FLOW.length - 1, i + 1)] }
@@ -60,6 +71,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const start = useCallback((name: string) => {
+    if (!navOk()) return
     save('name', name)
     setState((s) => ({ ...s, name, screen: 'briefing', missionScores: [0, 0, 0, 0] }))
   }, [])
@@ -73,6 +85,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const restart = useCallback(() => {
+    if (!navOk()) return
     setState((s) => ({ ...s, screen: 'briefing', missionScores: [0, 0, 0, 0], round: s.round + 1 }))
   }, [])
 

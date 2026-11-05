@@ -6,13 +6,13 @@ export function MissionHeader({ n, title, right }: { n: number; title: string; r
   const { total } = useGame()
   return (
     <div className="relative z-10 px-4 pb-2 pr-16 pt-[max(12px,env(safe-area-inset-top))]">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <div className="min-w-0 flex-1">
           <div className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-signal">Mission {n}/4</div>
-          <div className="title-font truncate text-[22px] leading-tight">{title}</div>
+          <div className="title-font truncate text-[clamp(18px,5.6vw,22px)] leading-tight">{title}</div>
         </div>
         {right}
-        <div className="glass flex items-center gap-1.5 rounded-full px-3 py-1.5 text-lg font-black text-gold">
+        <div className="glass flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1.5 text-[17px] font-black text-gold">
           <span aria-hidden>⭐</span>
           <AnimatedNumber value={total} />
         </div>
