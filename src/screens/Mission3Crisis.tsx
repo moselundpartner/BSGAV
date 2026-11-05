@@ -106,7 +106,7 @@ function CanalScene() {
       {[0, 1, 2, 3].map((i) => (
         <div key={i} className="absolute h-[6%] w-[11%] rounded-r-full bg-night-700" style={{ left: `${2 + i * 9}%`, top: `${37 + i * 1.9}%`, rotate: '-12deg' }} />
       ))}
-      <motion.div className="absolute left-[26%] top-[18%] text-3xl" animate={{ rotate: [0, -10, 0] }} transition={{ duration: 0.8, repeat: Infinity }} aria-hidden>
+      <motion.div className="absolute left-[64%] top-[6%] text-3xl" animate={{ rotate: [0, -10, 0] }} transition={{ duration: 0.8, repeat: Infinity }} aria-hidden>
         🚜
       </motion.div>
       <div className="absolute bottom-[8%] right-[6%] rounded-lg bg-bad px-2 py-1 text-sm font-black text-ink shadow-card">⛔ GESPERRT</div>
