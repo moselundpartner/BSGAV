@@ -55,15 +55,24 @@ const FACTS: Fact[] = [
     body: (
       <span className="block space-y-1.5">
         <span className="block">Sprich uns direkt hier am Stand an!</span>
-        <span className="block">
-          👤 <P>{INFO.contactPerson}</P>
-        </span>
-        <span className="block">
-          📞 <P>{INFO.contact}</P>
-        </span>
-        <span className="block">
-          🌐 <P>{INFO.website}</P>
-        </span>
+        {INFO.contactPerson && (
+          <span className="block">
+            👤 Eure Ansprechpartnerinnen: <P>{INFO.contactPerson}</P>
+          </span>
+        )}
+        {INFO.contact && (
+          <span className="block">
+            📞 <P>{INFO.contact}</P>
+          </span>
+        )}
+        {INFO.website && (
+          <span className="block">
+            🌐{' '}
+            <a href={INFO.website} target="_blank" rel="noopener noreferrer" className="rounded bg-gold/20 px-1 font-black text-gold underline underline-offset-4" onPointerDownCapture={(e) => e.stopPropagation()}>
+              {INFO.website.replace(/^https?:\/\//, '')}
+            </a>
+          </span>
+        )}
         <span className="block">
           🏫 <P>{INFO.schoolName}</P>
         </span>

@@ -19,22 +19,22 @@ eigenen Handy: ohne Installation, ohne Login, ohne Tracking.
 
 Nach jeder Mission folgt ein Satz „Im echten Beruf heißt das: …“.
 
-## ✏️ Platzhalter ausfüllen (wichtig vor dem Infotag!)
+## ✏️ Angaben für den Infostand
 
-Alle Angaben für euren Stand stehen in **`src/content/config.ts`**:
+Alle Angaben stehen in **`src/content/config.ts`**:
 
 ```ts
 export const INFO = {
-  schoolName: '[SCHULNAME]',
-  trainingPay: '[AUSBILDUNGSVERGÜTUNG]',
-  contact: '[KONTAKT]',
-  contactPerson: '[ANSPRECHPARTNER]',
-  website: '[WEBSITE]',
+  schoolName: 'BSGAV Bremen',
+  trainingPay: '800–1.200 € im Monat',
+  contact: '',            // Telefon/E-Mail – leer = Zeile wird ausgeblendet
+  contactPerson: 'Sabine Rohrßen und Nicole Wessels',
+  website: 'https://bs-gav.de',
 }
 ```
 
-Ersetzt die Texte in eckigen Klammern durch eure echten Angaben. Danach neu deployen.
-Alle Euro-Beträge im Spiel (Mission 3 & 4) sind als Beispielwerte gekennzeichnet.
+Nach einer Änderung einfach neu deployen.
+Alle Euro-Beträge in Mission 3 & 4 sind im Spiel als Beispielwerte gekennzeichnet.
 
 ## Lokal starten
 

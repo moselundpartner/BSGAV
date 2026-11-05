@@ -49,7 +49,7 @@ Eigener Dateiname: `npm run qr -- https://… schild.png`
 
 ## Checkliste vor dem Infotag
 
-- [ ] Platzhalter in `src/content/config.ts` ausgefüllt und neu deployed
+- [x] Angaben in `src/content/config.ts` ausgefüllt (Schule, Vergütung, Ansprechpartnerinnen, Website)
 - [ ] Spiel einmal komplett auf einem iPhone (Safari) und einem Android-Handy (Chrome) durchgespielt
 - [ ] Deployment Protection für Production aus
 - [ ] QR-Code mit der **finalen** URL erzeugt und getestet

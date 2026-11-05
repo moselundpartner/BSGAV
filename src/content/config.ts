@@ -6,11 +6,12 @@
  *  Keine erfundenen Zahlen oder Firmennamen eintragen!
  */
 export const INFO = {
-  schoolName: '[SCHULNAME]',
-  trainingPay: '[AUSBILDUNGSVERGÜTUNG]',
-  contact: '[KONTAKT]',
-  contactPerson: '[ANSPRECHPARTNER]',
-  website: '[WEBSITE]',
+  schoolName: 'BSGAV Bremen',
+  trainingPay: '800–1.200 € im Monat',
+  /** Telefon oder E-Mail – leer lassen, dann wird die Zeile ausgeblendet */
+  contact: '',
+  contactPerson: 'Sabine Rohrßen und Nicole Wessels',
+  website: 'https://bs-gav.de',
 }
 
 /** Glossar: Fachbegriffe, einfach erklärt. */
