@@ -1,0 +1,5 @@
+node_modules
+dist
+*.local
+qr-*.png
+.DS_Store

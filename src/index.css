@@ -1,0 +1,217 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --night-900: #061226;
+  --night-700: #0b2a3f;
+  --petrol: #13707f;
+  --signal: #ff7a1a;
+  --gold: #ffc940;
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: #030a18;
+  color: #f2f7fa;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Rotate hint (landscape phones) ---------- */
+#rotate-hint {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  #rotate-hint {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: radial-gradient(circle at 50% 40%, #0b2a3f, #061226 70%);
+    color: #f2f7fa;
+    font: 700 20px/1.3 system-ui, -apple-system, sans-serif;
+    text-align: center;
+    padding: 24px;
+  }
+  .rotate-phone {
+    width: 46px;
+    height: 80px;
+    border: 4px solid #ff7a1a;
+    border-radius: 10px;
+    animation: rotate-phone 1.8s ease-in-out infinite;
+  }
+}
+@keyframes rotate-phone {
+  0%, 20% { transform: rotate(-90deg); }
+  60%, 100% { transform: rotate(0deg); }
+}
+
+@layer components {
+  .glass {
+    background: linear-gradient(160deg, rgba(28, 147, 163, 0.16), rgba(6, 18, 38, 0.72));
+    border: 1px solid rgba(79, 195, 207, 0.22);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .glass-strong {
+    background: linear-gradient(160deg, rgba(19, 112, 127, 0.35), rgba(6, 18, 38, 0.92));
+    border: 1px solid rgba(79, 195, 207, 0.3);
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .text-glow {
+    text-shadow: 0 0 18px rgba(255, 201, 64, 0.45);
+  }
+  .title-font {
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .container-ribs {
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.16) 0 2px,
+      rgba(255, 255, 255, 0.08) 2px 3px,
+      transparent 3px 7px
+    );
+  }
+}
+
+/* ---------- Ambient animations (CSS = cheap & smooth) ---------- */
+@keyframes wave-x {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+.wave-layer {
+  animation: wave-x linear infinite;
+  will-change: transform;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(3px) rotate(0.6deg); }
+}
+.bob {
+  animation: bob 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}
+.twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0.15; }
+  100% { opacity: 1; }
+}
+.blink {
+  animation: blink 1.6s steps(1) infinite;
+}
+
+@keyframes swing {
+  0%, 100% { transform: rotate(-3.5deg); }
+  50% { transform: rotate(3.5deg); }
+}
+.swing {
+  animation: swing 1.9s ease-in-out infinite;
+  transform-origin: 50% 0%;
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-y {
+  animation: float-y 2.6s ease-in-out infinite;
+}
+
+@keyframes rain {
+  from { transform: translate3d(0, -20%, 0); }
+  to { transform: translate3d(-8%, 20%, 0); }
+}
+.rain {
+  animation: rain 0.45s linear infinite;
+}
+
+@keyframes flash {
+  0%, 88%, 100% { opacity: 0; }
+  90% { opacity: 0.85; }
+  92% { opacity: 0.1; }
+  94% { opacity: 0.6; }
+}
+.lightning {
+  animation: flash 4.2s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2.8s linear infinite;
+}
+
+@keyframes beam {
+  0%, 100% { transform: rotate(-18deg); opacity: 0.5; }
+  50% { transform: rotate(18deg); opacity: 0.85; }
+}
+.beam {
+  animation: beam 6s ease-in-out infinite;
+  transform-origin: 50% 0%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-layer, .bob, .twinkle, .swing, .float-y, .rain, .beam, .shimmer {
+    animation-duration: 0s !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+.app-h {
+  height: 100vh;
+  height: 100dvh;
+}
