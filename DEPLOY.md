@@ -25,6 +25,25 @@ vercel          # erste Vorschau, Fragen mit Enter bestätigen
 vercel --prod   # Live-Version veröffentlichen
 ```
 
+## Variante C: Eine einzige HTML-Datei
+
+`deploy/index.html` enthält das komplette Spiel in **einer** Datei (JS, CSS und Grafiken inline,
+ca. 390 KB, gzip ca. 125 KB). Neu erzeugen nach Änderungen:
+
+```bash
+npm run build && npm run single
+```
+
+Mit der Vercel-CLI veröffentlichen:
+
+```bash
+cd deploy
+vercel --prod
+```
+
+Die Datei funktioniert auch auf jedem anderen Webspace (z. B. auf der Schul-Website hochladen)
+und sogar offline per Doppelklick.
+
 ## QR-Code erzeugen
 
 Sobald die finale URL feststeht:
